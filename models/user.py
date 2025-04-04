@@ -1,9 +1,6 @@
 from utils.db import db
 from bson import ObjectId
 
-from utils.db import db
-from bson import ObjectId
-
 class User:
     def __init__(self, name, email, image, phone, password, _id=None):
         self._id = _id

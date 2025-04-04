@@ -1,7 +1,6 @@
 from utils.db import db
 from bson import ObjectId
 import bcrypt
-from utils.db import db
 from bson import ObjectId
 
 class User:

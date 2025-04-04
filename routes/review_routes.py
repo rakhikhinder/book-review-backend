@@ -28,3 +28,13 @@ def delete_review(review_id):
     if result.deleted_count:
         return jsonify({"message": "Review deleted successfully"}), 200
     return jsonify({"message": "Review not found"}), 404
+
+@review_routes.route('/reviews/<user_id>/<book_id>', methods=['GET'])
+def get_reviews_by_user_and_book(user_id, book_id):
+    reviews = Review.get_by_user_and_book(user_id, book_id)
+
+    if not reviews:
+        return jsonify({"message": "No reviews found for the given user and book"}), 404
+
+    return jsonify(reviews), 200
+

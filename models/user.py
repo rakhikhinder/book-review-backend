@@ -1,5 +1,7 @@
 from utils.db import db
 from bson import ObjectId
+import bcrypt
+from bson import ObjectId
 
 class User:
     def __init__(self, name, email, image, phone, password, _id=None):
@@ -46,6 +48,15 @@ class User:
          except Exception as e:
                     print(f"Error fetching user by email: {str(e)}")
                     return None
+    @staticmethod
+    def update_password(user_id, new_password):
+        # Encrypt the new password
+        hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+        # Update the password in the database
+        return db.users.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": {"password": hashed_password.decode('utf-8')}}
+        )
 
 
 

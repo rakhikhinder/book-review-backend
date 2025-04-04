@@ -7,12 +7,22 @@ book_routes = Blueprint('book_routes', __name__)
 @book_routes.route('/books', methods=['POST'])
 def add_book():
     data = request.json
+    if not data.get('user_id'):
+        return jsonify({"message": "User ID is required"}), 400
+    
     Book.create(data)
     return jsonify({"message": "Book added successfully"}), 201
 
 @book_routes.route('/books', methods=['GET'])
 def get_books():
     books = Book.get_all()
+    return jsonify(serialize_document(books)), 200
+
+@book_routes.route('/books/<user_id>', methods=['GET'])
+def get_books_by_user(user_id):
+    books = Book.get_by_user(user_id)
+    if not books:
+        return jsonify({"message": "No books found for this user"}), 404
     return jsonify(serialize_document(books)), 200
 
 @book_routes.route('/books/<book_id>', methods=['PUT'])

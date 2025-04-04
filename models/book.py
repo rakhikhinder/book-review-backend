@@ -1,5 +1,8 @@
 from utils.db import db
 from bson import ObjectId
+from bson import ObjectId
+
+from bson import ObjectId
 
 class Book:
     def __init__(self, user_id, title, description, image, author_name, votecount=0, unvotecount=0, purchase_link=""):
@@ -31,4 +34,24 @@ class Book:
     @staticmethod
     def get_by_user(user_id):
         return list(db.books.find({"user_id": user_id}))
+
+    @staticmethod
+    def vote(book_id):
+        return db.books.update_one(
+            {"_id": ObjectId(book_id)},
+            {"$inc": {"votecount": 1}}
+        )
+
+    @staticmethod
+    def unvote(book_id):
+        return db.books.update_one(
+            {"_id": ObjectId(book_id)},
+            {"$inc": {"unvotecount": 1}}
+        )
+
+    @staticmethod
+    def get_by_id(book_id):
+        return db.books.find_one({"_id": ObjectId(book_id)})
+
+
 

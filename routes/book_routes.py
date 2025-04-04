@@ -39,3 +39,31 @@ def delete_book(book_id):
     if result.deleted_count:
         return jsonify({"message": "Book deleted successfully"}), 200
     return jsonify({"message": "Book not found"}), 404
+@book_routes.route('/books/<book_id>/vote', methods=['POST'])
+def vote_book(book_id):
+    book = Book.get_by_id(book_id)
+    if not book:
+        return jsonify({"message": "Book not found"}), 404
+
+    result = Book.vote(book_id)
+    if result.modified_count:
+        return jsonify({"message": "Vote counted successfully"}), 200
+    return jsonify({"message": "Failed to count vote"}), 500
+
+@book_routes.route('/books/<book_id>/unvote', methods=['POST'])
+def unvote_book(book_id):
+    book = Book.get_by_id(book_id)
+    if not book:
+        return jsonify({"message": "Book not found"}), 404
+
+    result = Book.unvote(book_id)
+    if result.modified_count:
+        return jsonify({"message": "Unvote counted successfully"}), 200
+    return jsonify({"message": "Failed to count unvote"}), 500
+
+@book_routes.route('/books/<book_id>', methods=['GET'])
+def get_book_details(book_id):
+    book = Book.get_by_id(book_id)
+    if not book:
+        return jsonify({"message": "Book not found"}), 404
+    return jsonify(book), 200

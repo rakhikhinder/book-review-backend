@@ -5,7 +5,6 @@ import bcrypt
 user_routes = Blueprint('user_routes', __name__)
 
 @user_routes.route('/users', methods=['POST'])
-@user_routes.route('/users', methods=['POST'])
 def add_user():
     data = request.json
     email = data.get('email')
@@ -57,4 +56,24 @@ def login():
         return jsonify({"message": "Login successful", "user_id": str(user["_id"])}), 200
 
     return jsonify({"message": "Invalid email or password"}), 401
+
+@user_routes.route('/users/reset_password', methods=['POST'])
+def reset_password():
+    data = request.json
+    email = data.get('email')
+    new_password = data.get('new_password')
+
+    # Find the user based on email
+    user = User.get_by_email(email)
+
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    # Update the user's password
+    result = User.update_password(user["_id"], new_password)
+
+    if result.modified_count:
+        return jsonify({"message": "Password reset successfully"}), 200
+    return jsonify({"message": "Password reset failed"}), 500
+
 

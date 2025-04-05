@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.review import Review
+from utils.json_util import serialize_document
 
 review_routes = Blueprint('review_routes', __name__)
 
@@ -36,5 +37,5 @@ def get_reviews_by_user_and_book(user_id, book_id):
     if not reviews:
         return jsonify({"message": "No reviews found for the given user and book"}), 404
 
-    return jsonify(reviews), 200
+    return jsonify(serialize_document(reviews)), 200
 
